@@ -10,10 +10,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
-import java.awt.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 
 /**
  * Created by kwasi on 4/18/2017.
@@ -45,5 +45,33 @@ public class Client extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
+        textField.setOnAction(event -> {
+            try {
+                double radius = Double.parseDouble(textField.getText().trim());
+
+                toServer.writeDouble(radius);
+                toServer.flush();
+
+                double area = fromServer.readDouble();
+
+                textArea.appendText("radius is: " + radius + '\n' );
+                textArea.appendText("Area from server is: " + area
+                + '\n');
+
+
+            }
+            catch (IOException ex){
+                System.err.print(ex);
+            }
+
+        });
+        try {
+            Socket socket = new Socket("localHost",8000);
+            fromServer = new DataInputStream(socket.getInputStream());
+            toServer = new DataOutputStream(socket.getOutputStream());
+        }
+        catch (IOException exception){
+            textArea.appendText(exception.toString() + '\n');
+        }
     }
 }
