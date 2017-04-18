@@ -50,15 +50,8 @@ public class Server extends Application {
                     Platform.runLater(() -> {
                         textArea.appendText("Radius received from client: " + radius + '\n');
                         textArea.appendText("Area is: " + area + '\n');
-                    }
-
-
-                    );
+                    });
                 }
-
-
-
-
             }
             catch (IOException ex){
                 ex.printStackTrace();
